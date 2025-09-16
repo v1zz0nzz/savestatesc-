@@ -1,0 +1,138 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+    int room = 0;   // 0,1,2 = three rooms
+    int hp = 100;
+    int money = 0;
+    int keys = 0;
+    char ans;
+
+    // -------- LOAD OR NEW ----------
+    cout << "Load game from file? (y/n): ";
+    cin >> ans;
+    if (ans == 'y' || ans == 'Y') {
+        ifstream in("save.txt");
+        if (in) {
+            in >> room >> hp >> money >> keys;
+            cout << "Loaded. Room=" << room << " HP=" << hp << "Money = " << money << " Keys = " << keys << "\n";
+        }
+        else {
+            cout << "No save found. Starting new.\n";
+        }
+    }
+
+    bool running = true;
+    while (running) {
+        cout << "\n------------------------------\n";
+        cout << "HP: " << hp << " | Room: " << room << " " << " | Money: " << money << " " << " | Keys: " << keys << "\n";
+
+        switch (room) {
+        case 0:
+            cout << "Room 0: A quiet hallway. You found 2 dollars! (+2 Cash)\n";
+            money += 2;
+            cout << "Options: (e = east to Room 1, q = quit)\n";
+            cin >> ans;
+            if (ans == 'e') room = 1;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+
+        case 1:
+            cout << "Room 1: A dusty library. Sneeze! (-3 HP)\n";
+            hp -= 3;
+            cout << "Options: (w = west to Room 0, e = east to Room 2, q = quit)\n";
+            cin >> ans;
+            if (ans == 'w') room = 0;
+            else if (ans == 'e') room = 2;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+
+        case 2:
+            cout << "Room 2: A cold cellar. Brrr… There's money! (+10 Cash)(-5 HP)\n";
+            hp -= 5;
+            money += 10;
+            cout << "Options: (w = west to Room 1, n = north to Room 3, q = quit)\n";
+            cin >> ans;
+            if (ans == 'w') room = 1;
+            else if (ans == 'n') room = 3;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+
+        case 3:
+            cout << "Room 3: You ate bread! (+3 HP)" << endl;
+            hp += 3;
+            cout << "Options: (s = south to Room 2, w = west to Room 4, q = quit\n";
+            cin >> ans;
+            if (ans == 's') room = 2;
+            else if (ans == 'w') room = 4;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+
+        case 4:
+            cout << "Room 4: It's a freezer! There's a Key! (Keys +1)(-8 HP)" << endl;
+            hp -= 9;
+            keys += 1;
+            cout << "Options: (e = east to Room 3, n = north to Room 5, q = quit\n";
+            cin >> ans;
+            if (ans == 'e') room = 3;
+            else if (ans == 'n') room = 5;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+
+        case 5:
+            cout << "Room 5: You are in a library! You find 5 dollars and food! (+5 HP)(+7 CASH)" << endl;
+            hp += 5;
+            money += 7;
+            cout << "Options: (s = south to Room 4, n = north to Room 6, q = quit\n";
+            cin >> ans;
+            if (ans == 's') room = 4;
+            else if (ans == 'n') room = 6;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+
+        case 6:
+            cout << "Room 6: It's a cellar! There's a key but you stun your toe :(. (-4 HP)(+1 KEY)" << endl;
+            hp -= 4;
+            keys += 1;
+            cout << "Options: (s = south to Room 5, e = east to Room 7, q = quit\n";
+            cin >> ans;
+            if (ans == 's') room = 5;
+            else if (ans == 'e') room = 7;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+
+        case 7:
+            cout << "Room 7: You're in an attic?!? There's money on the ground! (+9 CASH)" << endl;
+            money += 9;
+            cout << "Options: (w = west to Room 6, s = south to room 8, q = quit\n";
+            cin >> ans;
+            if (ans == 'w')room = 6;
+            else if (ans == 's')room = 8;
+            else if (ans == 'q') running = false;
+            else cout << "Invalid move.\n";
+            break;
+        }
+
+        if (hp <= 0) {
+            cout << "You fainted! Game over.\n";
+            running = false;
+        }
+    }
+
+    // -------- SAVE ----------
+    ofstream out("save.txt");
+    if (out) {
+        out << room << " " << hp << " " << money << " " << " " << keys << "\n";
+        cout << "Game saved (room=" << room << ", hp=" << hp << ")\n";
+    }
+    cout << "Goodbye!\n";
+    return 0;
+}
